@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:complexType name="Place">
+		<xsd:attribute name="id" type="xsd:string"/>				
+	</xsd:complexType>
+
+	<xsd:complexType name="rship">
+		<xsd:sequence>
+			<xsd:element name="to" type="xsd:string"/>
+			<xsd:element name="type" type="xsd:string"/>
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:element name="pathsTo">
+		<xsd:complexType>			
+			<xsd:sequence>
+			<xsd:element name="to" type="xsd:anyURI"/>
+			<xsd:element name="max_depth" type="xsd:int"/>
+			<xsd:element name="relationships" type="Relationships"/>
+			<xsd:element name="algorithm" type="xsd:string"/>
+			</xsd:sequence>
+			
+		</xsd:complexType>				
+	</xsd:element>
+	
+	<xsd:complexType name="Relationships">
+    	<xsd:sequence>
+			<xsd:element name="type" type="xsd:string"/>
+			<xsd:element name="direction" type="xsd:string" />
+		</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:element name="path">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="nodes" type="path" />
+			</xsd:sequence>
+		</xsd:complexType>
+	 </xsd:element>
+	 
+	<xsd:simpleType name="path">
+		<xsd:list itemType="xsd:string" />
+	</xsd:simpleType>
+
+</xsd:schema>

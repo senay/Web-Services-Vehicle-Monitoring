@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			Road Navigation System
+			Senay Semu Tadesse
+		</xsd:documentation>
+	</xsd:annotation>
+	<xsd:element name="entity">			
+        <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="places" type="xsd:anyURI" />
+				<xsd:element name="vehicles" type="xsd:anyURI" />
+				<xsd:element name="roadSegments" type="xsd:anyURI" />
+				<xsd:element name="gates" type="xsd:anyURI" />
+				<xsd:element name="parkingAreas" type="xsd:anyURI" />
+				<xsd:element name="self" type="xsd:anyURI" />	
+			</xsd:sequence>		
+		</xsd:complexType>
+    </xsd:element>
+    
+    <xsd:element name="places">			
+        <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="totalPages" type="xsd:positiveInteger"/>
+				<xsd:element name="page" type="xsd:positiveInteger"/>
+				<xsd:element name="next" type="xsd:anyURI"/>
+				<xsd:element ref="place" maxOccurs="unbounded" minOccurs="1" />				
+			</xsd:sequence>
+		</xsd:complexType>
+    </xsd:element>
+	<xsd:element name="place">		
+        <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="self" type="xsd:anyURI" minOccurs="0" />
+				<xsd:element name="IsconnectedTo" type="xsd:string" minOccurs="0" maxOccurs="unbounded"/>
+				<xsd:choice>
+					<xsd:element name="RoadSegment" type="roadSegmentType">
+						<xsd:unique name="roadSegmentUniqueness">
+							<xsd:selector xpath="RoadSegment" />
+							<xsd:field xpath="@name" />
+							<xsd:field xpath="roadName" />
+						</xsd:unique>				
+					</xsd:element>
+					<xsd:element name="ParkingArea" type="parkingAreaType" />
+					<xsd:element name="Gate">
+						<xsd:simpleType>
+							<xsd:restriction base="xsd:string">
+								<xsd:enumeration value="IN" />
+								<xsd:enumeration value="OUT" />
+								<xsd:enumeration value="INOUT" />
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+				</xsd:choice>
+				<xsd:element name="vehicles" type="xsd:anyURI" minOccurs="0" maxOccurs="unbounded"/>
+			</xsd:sequence>	
+			<xsd:attribute name="id" type="xsd:string" />
+			<xsd:attribute name="capacity" type="xsd:int" />
+		</xsd:complexType>
+    </xsd:element>
+    
+    <xsd:complexType name="roadSegmentType">
+		<xsd:attribute name="name" type="xsd:string" use="required" />	
+		<xsd:attribute name="roadName" type="xsd:string" use="required" />
+	</xsd:complexType>
+	
+	<xsd:complexType name="parkingAreaType">
+		<xsd:sequence>
+			<xsd:element name="service" type="xsd:string" minOccurs="1" maxOccurs="unbounded" />				
+		</xsd:sequence>
+	</xsd:complexType>
+    
+    
+	<xsd:element name="trackedVehicles">
+		<xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="totalPages" type="xsd:positiveInteger"/>
+				<xsd:element name="page" type="xsd:positiveInteger"/>
+				<xsd:element name="next" type="xsd:anyURI"/>
+				<xsd:element ref="vehicle" minOccurs="0" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+	
+	<xsd:element name="vehicle">
+		 <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="self" type="xsd:anyURI" minOccurs="0" />
+				<xsd:element name="suggestedPath" type="xsd:anyURI" minOccurs="0" />				
+			</xsd:sequence>
+			<xsd:attribute name="position" type="xsd:anyURI" use="required" />
+			<xsd:attribute name="comesFrom" type="xsd:anyURI" use="required" />
+			<xsd:attribute name="isDirectedTo" type="xsd:anyURI" use="required" />
+			<xsd:attribute name="VehicleType" type="vehicleTypeType" use="required" />
+			<xsd:attribute name="VehicleState" type="vehicleStateType" use="required" />
+			<xsd:attribute name="entryTime" type="xsd:dateTime" use="required" />
+			<xsd:attribute name="id" type="xsd:string" use="required" />	
+		</xsd:complexType> 
+	</xsd:element>
+	<xsd:simpleType name="vehicleTypeType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="CAR" />
+			<xsd:enumeration value="TRUCK" />
+			<xsd:enumeration value="SHUTTLE" />
+			<xsd:enumeration value="CARAVAN" />
+		</xsd:restriction>
+	</xsd:simpleType>	
+	<xsd:simpleType name="vehicleStateType">
+		<xsd:restriction base="xsd:string">
+			<xsd:enumeration value="PARKED" />
+			<xsd:enumeration value="IN_TRANSIT" />
+		</xsd:restriction>
+	</xsd:simpleType>
+	
+	<xsd:element name="connections">
+		
+        <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element ref="connection" minOccurs="1" maxOccurs="unbounded" />
+			</xsd:sequence>
+		</xsd:complexType>
+    </xsd:element>
+	
+	<xsd:element name="connection">		
+       <xsd:complexType>
+			<xsd:sequence>
+				<xsd:element name="from" type="xsd:anyURI" />
+				<xsd:element name="to" type="xsd:anyURI" />
+				<xsd:element name="self" type="xsd:anyURI" minOccurs="0" />
+			</xsd:sequence>
+		</xsd:complexType>
+	</xsd:element>
+</xsd:schema>
